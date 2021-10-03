@@ -4,6 +4,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using PlayFlock.Models;
 
 namespace PlayFlock.Controllers
 {
@@ -22,7 +23,7 @@ namespace PlayFlock.Controllers
         {
             _logger = logger;
         }
-
+        [Route("api/list")]
         [HttpGet]
         public IEnumerable<WeatherForecast> Get()
         {

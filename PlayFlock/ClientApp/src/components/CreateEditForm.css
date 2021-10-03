@@ -1,0 +1,24 @@
+.CreateEditForm_flexWrapper {
+  display: flex;
+  justify-content: space-between;
+}
+
+.CreateEditForm_section {
+  margin-top: 10px;
+}
+
+.CreateEditForm_textField, .CreateEditForm_select {
+  width: 100%;
+}
+
+.CreateEditForm_button {
+  width: 210px;
+}
+
+.CreateEditForm_button-create {
+  background-color: #66FF99 !important;
+}
+
+.CreateEditForm_button-reset {
+  background-color: #FFCC99 !important;
+}

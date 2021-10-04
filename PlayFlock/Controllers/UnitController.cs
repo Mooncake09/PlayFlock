@@ -39,33 +39,41 @@ namespace PlayFlock.Controllers
 
         [Route("api/unit/create")]
         [HttpPost]
-        public async Task<RedirectResult> AddNewUnit([FromBody]object jsonObject)
+        public async Task AddNewUnit([FromBody]object jsonObject)
         {
-            Unit unit;
+            
             var jsonString = jsonObject.ToString();
-     
-            if (jsonString.Contains("Warrior"))
-            {
-                unit = JsonConvert.DeserializeObject<WarriorUnit>(jsonString);
-            }
-            else if (jsonString.Contains("Archer"))
-            {
-                unit = JsonConvert.DeserializeObject<ArcherUnit>(jsonString);
-            }
-            else if (jsonString.Contains("Wizard"))
-            {
-                unit = JsonConvert.DeserializeObject<WizardUnit>(jsonString);
-            }
-            else
-            {
-                unit = null;
-            }
+            var unitJsonModel = JsonConvert.DeserializeObject<UnitJsonModel>(jsonString);
+            var unit = unitJsonModel.GetUnitInstance();
             
             if (unit != null)
             {
                  await db.AddUnitToDB(unit);
             }
-            return RedirectPermanent("~/list");
+        }
+
+        [HttpGet]
+        [Route("api/unit/edit/{id}")]
+        public async Task<Unit> GetSingleUser(string id)
+        {
+            return await db.GetUnit(id);
+        }
+
+        [HttpPut]
+        [Route("api/unit/edit/{id}")]
+        public async Task UpdateUnit([FromBody]object jsonObject, string id)
+        {
+            var jsonString = jsonObject.ToString();
+            var unitJsonModel = JsonConvert.DeserializeObject<UnitJsonModel>(jsonString);
+            var unit = unitJsonModel.GetUnitInstance();
+            unit.Id = id;
+            await db.UpdateUnitInfo(unit);
+        }
+        [HttpDelete]
+        [Route("api/unit/remove/{id}")]
+        public async Task DeleteUnit(string id)
+        {
+            await db.RemoveUnitFromDB(id);
         }
     }
 }

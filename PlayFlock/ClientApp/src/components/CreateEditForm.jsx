@@ -1,74 +1,96 @@
 import React, { Component } from 'react';
-import { Redirect } from "react-router";
+import { withRouter } from "react-router";
 import { TextField, Button, Container, Select, MenuItem, InputLabel } from '@material-ui/core';
 import './CreateEditForm.css';
 
-export class CreateForm extends Component {
+const initialValues = {
+  hp: '',
+  maxHP: '',
+  mana: '',
+  maxMana: '',
+  armor: '',
+  magicResistance: '',
+  unitClass: '',
+  x: '',
+  y: ''
+}
+
+class CreateEditForm extends Component {
   constructor(props) {
     super(props);
-    this.state = {
-      hp: '',
-      maxHp: '',
-      mana: '',
-      maxMana: '',
-      armor: '',
-      magicResistance: '',
-      unitClass: '',
-      x: '',
-      y: ''
+    this.state = initialValues;
+  }
+
+  componentDidMount() {
+    const [, mode, id] = this.props.history.location.pathname.split('/');
+    const isInEditMode = mode === 'edit';
+
+    if (isInEditMode) {
+      fetch(`Unit/api/unit/edit/${id}`).then((response) => {
+        return response.json();
+      }).then((initialValues) => {
+        this.setState(initialValues)
+      });
     }
   }
 
-  fetchData = async (e) => {
+  createUnit = async (e) => {
     e.preventDefault();
-    const response = await fetch("Unit/api/unit/create", 
-    {
-      method: "POST",
-       headers: {
-         "Content-Type": "application/json;charset=utf-8",
-         "Accept": "application/json"
-      },
-      body: JSON.stringify({...this.state})
-    });
-    return (<Redirect push to="/list"/>);
-    //return await response.json();
+    await fetch("Unit/api/unit/create",
+      {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json;charset=utf-8",
+          "Accept": "application/json"
+        },
+        body: JSON.stringify({ 
+          ...this.state
+         })
+      });
+    this.props.history.push("/list");
+  }
+
+  editUnit = async (e) => {
+    const [, mode, id] = this.props.history.location.pathname.split('/');
+
+    e.preventDefault();
+    await fetch(`Unit/api/unit/edit/${id}`,
+      {
+        method: "PUT",
+        headers: {
+          "Content-Type": "application/json;charset=utf-8",
+          "Accept": "application/json"
+        },
+        body: JSON.stringify({ ...this.state })
+      });
+    this.props.history.push("/list");
   }
 
   resetForm = (e) => {
-    this.setState({
-      hp: '',
-      maxHp: '',
-      mana: '',
-      maxMana: '',
-      armor: '',
-      magicResistance: '',
-      unitClass: '',
-      x: '',
-      y: ''
-    });
+    this.setState(initialValues);
   }
 
-  validateHp = (value) => {
+  validatehp = (value) => {
     if (this.checkNegativeValue(value)) {
       return;
     }
-    if (+value > +this.state.maxHp) {
-      this.setState({ maxHp: value })
+    if (+value > +this.state.maxHP) {
+      this.setState({ maxHP: value })
     }
     this.setState({ hp: value })
   }
 
-  validateMaxHp = (value) => {
+  validatemaxHP = (value) => {
     if (this.checkNegativeValue(value)) {
       return;
     }
     if (+value < +this.state.hp) {
       this.setState({ hp: value })
     }
-    this.setState({ maxHp: value })
+    this.setState({ maxHP: value })
   }
 
-  validateMana = (value) => {
+  validatemana = (value) => {
     if (this.checkNegativeValue(value)) {
       return;
     }
@@ -78,7 +100,7 @@ export class CreateForm extends Component {
     this.setState({ mana: value })
   }
 
-  validateMaxMana = (value) => {
+  validatemaxMana = (value) => {
     if (this.checkNegativeValue(value)) {
       return;
     }
@@ -101,31 +123,33 @@ export class CreateForm extends Component {
     this.setState({ magicResistance: value })
   }
 
-  checkNegativeValue = (value) => value < 0 ? true : false
+  checkNegativeValue = (value) => value < 0 ? true : false;
+
   render() {
+    const [, mode] = this.props.history.location.pathname.split('/');
     return (
       <Container maxWidth="sm">
-        <form onSubmit={this.fetchData} method="POST">
+        <form onSubmit={mode=== 'edit' ? this.editUnit : this.createUnit} method="POST">
           <div className="CreateEditForm_flexWrapper">
             <TextField
               type="number"
               value={this.state.hp}
               min={0}
               onChange={(e) => {
-                this.validateHp(e.target.value)
+                this.validatehp(e.target.value)
               }}
               variant="outlined"
-              label="Current HP"
+              label="Current hp"
               required
             />
             <TextField
               type="number"
-              value={this.state.maxHp}
+              value={this.state.maxHP}
               onChange={(e) => {
-                this.validateMaxHp(e.target.value)
+                this.validatemaxHP(e.target.value)
               }}
               variant="outlined"
-              label="Maximum HP"
+              label="Maximum hp"
               required
             />
           </div>
@@ -134,20 +158,20 @@ export class CreateForm extends Component {
               type="number"
               value={this.state.mana}
               onChange={(e) => {
-                this.validateMana(e.target.value)
+                this.validatemana(e.target.value)
               }}
               variant="outlined"
-              label="Current Mana"
+              label="Current mana"
               required
             />
             <TextField
               type="number"
               value={this.state.maxMana}
               onChange={(e) => {
-                this.validateMaxMana(e.target.value)
+                this.validatemaxMana(e.target.value)
               }}
               variant="outlined"
-              label="Maximum Mana"
+              label="Maximum mana"
               required
             />
           </div>
@@ -180,7 +204,7 @@ export class CreateForm extends Component {
               labelId="demo-simple-select-label"
               id="demo-simple-select"
               value={this.state.unitClass}
-              label="Unit Class"
+              label="Unit class"
               onChange={(e) => this.setState({ unitClass: e.target.value })}
               required
             >
@@ -213,7 +237,7 @@ export class CreateForm extends Component {
               className="CreateEditForm_button CreateEditForm_button-create"
               variant="contained"
             >
-              Create
+              {mode === 'edit' ? 'Save' : 'Create'}
             </Button>
             <Button
               className="CreateEditForm_button CreateEditForm_button-reset"
@@ -228,3 +252,4 @@ export class CreateForm extends Component {
     );
   }
 }
+export default withRouter(CreateEditForm);

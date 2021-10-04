@@ -1,7 +1,5 @@
 import React, { Component } from 'react';
 import {Button, Container, Chip} from '@material-ui/core';
-// import Container from '@material-ui/core/Container';
-// import Chip from '@material-ui/core/Chip';
 
 export class UnitList extends Component {
     constructor(props) {
@@ -18,6 +16,11 @@ export class UnitList extends Component {
         this.setState({ unitList: data, loading: false });
     }
 
+    handleRemove = (id) => () => {
+        this.setState({ loading: true })
+        fetch(`Unit/api/unit/remove/${id}`, { method: 'DELETE' }).then(() => this.populateUnitData());
+    }
+
     render() {
         return (
             <Container maxWidth="md">
@@ -30,8 +33,8 @@ export class UnitList extends Component {
                         <Chip label={`class: ${unit.unitClass}`} style={{ marginRight: 15, backgroundColor: "#CC99FF", color: "black" }} />
                     </div>
                     <div>
-                        <Button variant="contained" href="/edit" style={{ backgroundColor: "#FFCC66" }}>EDIT</Button>
-                        <Button variant="contained" href="/remove" style={{ marginLeft: 10, backgroundColor: "#FF6666" }}>REMOVE</Button>
+                        <Button variant="contained" href={`/edit/${unit.id}`} style={{ backgroundColor: "#FFCC66" }}>EDIT</Button>
+                        <Button variant="contained" onClick={this.handleRemove(unit.id)} style={{ marginLeft: 10, backgroundColor: "#FF6666" }}>REMOVE</Button>
                     </div>
                 </Container>
                 )}

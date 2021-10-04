@@ -32,5 +32,24 @@ namespace PlayFlock.Models
         {
             await Units.InsertOneAsync(u);
         }
+
+        public async Task UpdateUnitInfo(Unit u)
+        {
+            var builder = new FilterDefinitionBuilder<Unit>();
+            var updateBuilder = new UpdateDefinitionBuilder<Unit>();
+            var filter = builder.Where(unit => unit.Id == u.Id);
+            await Units.ReplaceOneAsync(filter, u);
+        }
+
+        public async Task<Unit> GetUnit(string id)
+        {
+             return await Units.AsQueryable().FirstAsync(u => u.Id == id);
+        }
+        public async Task RemoveUnitFromDB(string id)
+        {
+            var builder = new FilterDefinitionBuilder<Unit>();
+            var filter = builder.Where(unit => unit.Id == id);
+            await Units.DeleteOneAsync(filter);
+        }
     }
 }

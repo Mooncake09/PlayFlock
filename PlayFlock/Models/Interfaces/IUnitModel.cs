@@ -18,7 +18,6 @@ namespace PlayFlock
         public string UnitClass { get; }
         public int X { get; set; }
         public int Y { get; set; }
-        public int BaseDamage { get; set; }
         public bool IsAlive { get; set; }
     }
 }

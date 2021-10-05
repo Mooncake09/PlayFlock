@@ -8,6 +8,7 @@ namespace PlayFlock.Models
     public class WizardUnit : Unit, IAttack
     {
         public int MaxAttackRange { get; private set; } = 150;
+        public int BaseDamage { get; set; } = new Random().Next(1, 20);
         public void Attack(ITakeDamage unit)
         {
             if (IsAlive)

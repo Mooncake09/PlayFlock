@@ -17,7 +17,7 @@ namespace PlayFlock.Models
         [JsonConstructor]
         public Unit()
         {
-
+        
         }
         public enum ClassList
         {
@@ -46,7 +46,6 @@ namespace PlayFlock.Models
         }
         public int X { get; set; }
         public int Y { get; set; }
-        public int BaseDamage { get; set; }
         public bool IsAlive { get; set; } = true;
         public double GetDistance(ITakeDamage p)
         {
@@ -54,16 +53,19 @@ namespace PlayFlock.Models
         }
         public virtual void TakeDamage(Damage damage)
         {
-            switch (damage.DamageTypeValue)
+            if(IsAlive)
             {
-                case Damage.DamageType.Physical:
-                    HP -= Math.Abs(Armor - (int)Math.Floor(damage.Value));
-                    break;
-                case Damage.DamageType.Magic:
-                    HP -= Math.Abs(MagicResistance - (int)Math.Floor(damage.Value));
-                    break;
+                switch (damage.DamageTypeValue)
+                {
+                    case Damage.DamageType.Physical:
+                        HP -= Math.Abs(Armor - (int)Math.Floor(damage.Value));
+                        break;
+                    case Damage.DamageType.Magic:
+                        HP -= Math.Abs(MagicResistance - (int)Math.Floor(damage.Value));
+                        break;
+                }
+                if (HP <= 0) IsAlive = false;
             }
-            if (HP <= 0) IsAlive = false;
         }
     }
 }

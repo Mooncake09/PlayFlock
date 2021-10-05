@@ -26,13 +26,13 @@ namespace PlayFlock.Models
             switch(UnitClass)
             {
                 case "Warrior":
-                    unit = new WarriorUnit() { HP = HP, MaxHP = MaxHP, Mana = Mana, MaxMana = MaxMana, Armor = Armor, BaseDamage = BaseDamage, MagicResistance = MagicResistance, X = X, Y = Y }; 
+                    unit = new WarriorUnit() { HP = HP, MaxHP = MaxHP, Mana = Mana, MaxMana = MaxMana, Armor = Armor, MagicResistance = MagicResistance, X = X, Y = Y }; 
                     break;
                 case "Archer":
-                    unit = new ArcherUnit() { HP = HP, MaxHP = MaxHP, Mana = Mana, MaxMana = MaxMana, Armor = Armor, BaseDamage = BaseDamage, MagicResistance = MagicResistance, X = X, Y = Y };
+                    unit = new ArcherUnit() { HP = HP, MaxHP = MaxHP, Mana = Mana, MaxMana = MaxMana, Armor = Armor, MagicResistance = MagicResistance, X = X, Y = Y };
                     break;
                 case "Wizard":
-                    unit = new WizardUnit() { HP = HP, MaxHP = MaxHP, Mana = Mana, MaxMana = MaxMana, Armor = Armor, BaseDamage = BaseDamage, MagicResistance = MagicResistance, X = X, Y = Y };
+                    unit = new WizardUnit() { HP = HP, MaxHP = MaxHP, Mana = Mana, MaxMana = MaxMana, Armor = Armor, MagicResistance = MagicResistance, X = X, Y = Y };
                     break;
             }
             return unit;

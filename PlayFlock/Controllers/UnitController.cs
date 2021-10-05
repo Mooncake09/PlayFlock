@@ -75,5 +75,17 @@ namespace PlayFlock.Controllers
         {
             await db.RemoveUnitFromDB(id);
         }
+        [HttpPost]
+        [Route("api/unit/attack")]
+        public async Task Attack([FromBody]object jsonObject)
+        {
+            var json = JContainer.FromObject(jsonObject);
+            string firstId = json.First.First.ToString();
+            string secondId = json.Last.Last.ToString();
+            IAttack attackingUnit = await db.GetUnit(firstId) as IAttack;
+            Unit defendingUnit = await db.GetUnit(secondId);
+            attackingUnit.Attack(defendingUnit);
+            await db.UpdateUnitInfo(defendingUnit);
+        }
     }
 }

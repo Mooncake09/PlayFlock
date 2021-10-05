@@ -8,6 +8,7 @@ namespace PlayFlock.Models
     public class ArcherUnit : Unit, IAttack
     {
         public int MaxAttackRange { get; private set; } = 350;
+        public int BaseDamage { get; set; } = new Random().Next(1, 20);
         public void Attack(ITakeDamage unit)
         {
             if (IsAlive)

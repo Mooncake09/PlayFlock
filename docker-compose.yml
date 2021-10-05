@@ -1,0 +1,19 @@
+version: "3.9"
+
+volumes:
+  mongodb_volume:
+
+services:
+  web_service:
+    build: .
+    restart: always
+    ports:
+      - 49157:49158
+
+  mongodb:
+    image: mongo:latest
+    volumes:
+      - mongodb_volume:/data/db
+    restart: always
+
+  

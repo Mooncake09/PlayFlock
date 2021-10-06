@@ -19,22 +19,12 @@ namespace PlayFlock.Controllers
         {
             db = context;
         }
-        public IActionResult Index()
-        {
-            return View();
-        }
 
         [HttpGet]
         [Route("api/unit/list")]
         public async Task<IEnumerable<Unit>> GetUnits()
         {
             return await db.GetUnitList();
-        }
-        [Route("unit/create")]
-        [HttpGet]
-        public IActionResult ShowCreateForm()
-        {
-            return View("Create");
         }
 
         [Route("api/unit/create")]
@@ -66,15 +56,21 @@ namespace PlayFlock.Controllers
             var jsonString = jsonObject.ToString();
             var unitJsonModel = JsonConvert.DeserializeObject<UnitJsonModel>(jsonString);
             var unit = unitJsonModel.GetUnitInstance();
-            unit.Id = id;
-            await db.UpdateUnitInfo(unit);
+
+            if (unit != null)
+            {
+                unit.Id = id;
+                await db.UpdateUnitInfo(unit);
+            }
         }
+
         [HttpDelete]
         [Route("api/unit/remove/{id}")]
         public async Task DeleteUnit(string id)
         {
             await db.RemoveUnitFromDB(id);
         }
+
         [HttpPost]
         [Route("api/unit/attack")]
         public async Task Attack([FromBody]object jsonObject)
@@ -84,8 +80,13 @@ namespace PlayFlock.Controllers
             string secondId = json.Last.Last.ToString();
             IAttack attackingUnit = await db.GetUnit(firstId) as IAttack;
             Unit defendingUnit = await db.GetUnit(secondId);
-            attackingUnit.Attack(defendingUnit);
-            await db.UpdateUnitInfo(defendingUnit);
+
+            if (attackingUnit != null && defendingUnit != null)
+            {
+                attackingUnit.Attack(defendingUnit);
+                attackingUnit.Attack(defendingUnit);
+                await db.UpdateUnitInfo(defendingUnit);
+            }
         }
     }
 }

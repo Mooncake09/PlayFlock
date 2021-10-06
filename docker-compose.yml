@@ -8,12 +8,17 @@ services:
     build: .
     restart: always
     ports:
-      - 49157:49158
+      - 49165:80
+      #- 49166:443
+      
 
   mongodb:
+    container_name: mongodb
     image: mongo:latest
     volumes:
       - mongodb_volume:/data/db
     restart: always
+    ports:
+      - 27017:27017
 
   

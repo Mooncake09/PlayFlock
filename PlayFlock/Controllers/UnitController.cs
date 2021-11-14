@@ -84,7 +84,6 @@ namespace PlayFlock.Controllers
             if (attackingUnit != null && defendingUnit != null)
             {
                 attackingUnit.Attack(defendingUnit);
-                attackingUnit.Attack(defendingUnit);
                 await db.UpdateUnitInfo(defendingUnit);
             }
         }
